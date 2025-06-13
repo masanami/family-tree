@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Tree Visualization Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        #controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            margin-right: 10px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #visualization-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Family Tree Visualization</h1>
+    
+    <div id="controls">
+        <button onclick="loadSampleData()">Load Sample Data</button>
+        <button onclick="exportPNG()">Export as PNG</button>
+        <button onclick="exportPDF()">Export as PDF</button>
+        <button onclick="clearVisualization()">Clear</button>
+    </div>
+    
+    <div id="visualization-container"></div>
+
+    <script type="module">
+        // Import the compiled JavaScript (after TypeScript compilation)
+        import { FamilyTreeVisualization } from './dist/visualization/index.js';
+        
+        // Create visualization instance
+        const viz = new FamilyTreeVisualization('visualization-container', {
+            width: 1000,
+            height: 600,
+            nodeRadius: 35,
+            levelHeight: 120
+        });
+        
+        // Make functions available globally for button clicks
+        window.viz = viz;
+        
+        window.loadSampleData = function() {
+            const sampleData = [
+                {
+                    id: '1',
+                    name: 'John Smith',
+                    birthDate: '1940-01-15',
+                    parentIds: []
+                },
+                {
+                    id: '2',
+                    name: 'Mary Johnson',
+                    birthDate: '1942-03-20',
+                    parentIds: []
+                },
+                {
+                    id: '3',
+                    name: 'Robert Smith',
+                    birthDate: '1965-06-10',
+                    parentIds: ['1', '2']
+                },
+                {
+                    id: '4',
+                    name: 'Susan Smith',
+                    birthDate: '1968-09-25',
+                    parentIds: ['1', '2']
+                },
+                {
+                    id: '5',
+                    name: 'David Smith',
+                    birthDate: '1990-12-05',
+                    parentIds: ['3']
+                },
+                {
+                    id: '6',
+                    name: 'Emma Smith',
+                    birthDate: '1993-04-18',
+                    parentIds: ['3']
+                },
+                {
+                    id: '7',
+                    name: 'Michael Smith',
+                    birthDate: '1995-08-30',
+                    parentIds: ['4']
+                }
+            ];
+            
+            viz.loadData(sampleData);
+        };
+        
+        window.exportPNG = async function() {
+            try {
+                await viz.exportAsPNG('family-tree.png');
+            } catch (error) {
+                alert('Error exporting PNG: ' + error.message);
+            }
+        };
+        
+        window.exportPDF = async function() {
+            try {
+                await viz.exportAsPDF('family-tree.pdf');
+            } catch (error) {
+                alert('Error exporting PDF: ' + error.message);
+            }
+        };
+        
+        window.clearVisualization = function() {
+            viz.clear();
+        };
+        
+        // Load sample data on page load
+        window.loadSampleData();
+    </script>
+</body>
+</html>
