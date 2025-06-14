@@ -1,3 +1,6 @@
+// Test setup file
+// Add any global test setup here
+
 // Mock Prisma Client for testing
 jest.mock('@prisma/client', () => {
   const mockPrismaClient = {
