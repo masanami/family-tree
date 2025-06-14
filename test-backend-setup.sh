@@ -56,14 +56,12 @@ test_command_exists() {
     local command=$1
     local test_name=$2
     
-    if cd backend && npm run $command --dry-run &>/dev/null; then
+    if [ -f "backend/package.json" ] && grep -q "\"$command\":" "backend/package.json"; then
         echo "✅ PASS: $test_name"
         ((PASSED++))
-        cd ..
     else
         echo "❌ FAIL: $test_name - スクリプトが定義されていません: $command"
         ((FAILED++))
-        cd .. 2>/dev/null
     fi
 }
 
