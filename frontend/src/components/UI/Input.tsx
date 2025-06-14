@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import React, { useId, useMemo } from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
@@ -7,7 +7,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLTe
   type?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
+const BASE_CLASSES = 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500';
+const ERROR_CLASSES = 'border-red-500 focus:ring-red-500 focus:border-red-500';
+
+export const Input = React.memo<InputProps>(({
   label,
   error,
   required = false,
@@ -19,29 +22,37 @@ export const Input: React.FC<InputProps> = ({
   const generatedId = useId();
   const inputId = id || generatedId;
   
-  const baseClasses = 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500';
-  const errorClasses = error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : '';
-  const classes = `${baseClasses} ${errorClasses} ${className}`;
+  const classes = useMemo(() => {
+    const errorClasses = error ? ERROR_CLASSES : '';
+    return `${BASE_CLASSES} ${errorClasses} ${className}`.trim();
+  }, [error, className]);
 
   const InputElement = type === 'textarea' ? 'textarea' : 'input';
+  const inputType = type === 'textarea' ? undefined : type;
 
   return (
     <div className="space-y-1">
       {label && (
         <label htmlFor={inputId} className="block text-sm font-medium text-gray-700">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-red-500 ml-1" aria-label="必須">*</span>}
         </label>
       )}
       <InputElement 
         id={inputId}
         className={classes} 
-        type={type === 'textarea' ? undefined : type}
+        type={inputType}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? `${inputId}-error` : undefined}
         {...props} 
       />
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <p id={`${inputId}-error`} className="text-sm text-red-600" role="alert">
+          {error}
+        </p>
       )}
     </div>
   );
-};
+});
+
+Input.displayName = 'Input';

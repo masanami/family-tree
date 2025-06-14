@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useMemo, useRef } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -8,39 +8,55 @@ interface ModalProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-export const Modal: React.FC<ModalProps> = ({
+const SIZE_CLASSES = {
+  sm: 'max-w-md',
+  md: 'max-w-lg',
+  lg: 'max-w-2xl',
+  xl: 'max-w-4xl'
+} as const;
+
+export const Modal = React.memo<ModalProps>(({
   isOpen,
   onClose,
   title,
   children,
   size = 'md'
 }) => {
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
 
+  const handleEscape = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  }, [onClose]);
+
+  useEffect(() => {
     if (isOpen) {
+      previousActiveElement.current = document.activeElement as HTMLElement;
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+      
+      setTimeout(() => {
+        modalRef.current?.focus();
+      }, 0);
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
+      
+      if (previousActiveElement.current) {
+        previousActiveElement.current.focus();
+      }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleEscape]);
+
+  const modalClasses = useMemo(() => {
+    return `relative bg-white rounded-lg shadow-xl w-full mx-4 ${SIZE_CLASSES[size]}`;
+  }, [size]);
 
   if (!isOpen) return null;
-
-  const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl'
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -54,10 +70,12 @@ export const Modal: React.FC<ModalProps> = ({
       
       {/* Modal */}
       <div 
-        className={`relative bg-white rounded-lg shadow-xl w-full mx-4 ${sizeClasses[size]}`}
+        ref={modalRef}
+        className={modalClasses}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
+        tabIndex={-1}
       >
         {/* Header */}
         {title && (
@@ -69,8 +87,9 @@ export const Modal: React.FC<ModalProps> = ({
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md p-1"
               aria-label="モーダルを閉じる"
+              type="button"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -84,4 +103,6 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   );
-};
+});
+
+Modal.displayName = 'Modal';
