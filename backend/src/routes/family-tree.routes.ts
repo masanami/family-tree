@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { validate } from '../middleware/validation';
 import { familyTreeSchema } from '../schemas/family-tree.schema';
+import { createRelationshipSchema } from '../schemas/relationship.schema';
 import { RelationshipController } from '../controllers/relationship.controller';
 import { RelationshipService } from '../services/relationship.service';
 
@@ -33,30 +34,12 @@ export class FamilyTreeRoutes {
 
     // GET /api/v1/family-trees/:treeId/relationships
     this.router.get('/:treeId/relationships', 
-      validate({
-        params: {
-          treeId: { required: true, type: 'string' }
-        },
-        query: {
-          page: { required: false, type: 'number', min: 1 },
-          limit: { required: false, type: 'number', min: 1, max: 100 }
-        }
-      }),
       (req, res, next) => this.relationshipController.getRelationshipsByFamilyTree(req, res, next)
     );
 
     // POST /api/v1/family-trees/:treeId/relationships
     this.router.post('/:treeId/relationships',
-      validate({
-        params: {
-          treeId: { required: true, type: 'string' }
-        },
-        body: {
-          person1Id: { required: true, type: 'string' },
-          person2Id: { required: true, type: 'string' },
-          relationshipType: { required: true, type: 'string', minLength: 1 }
-        }
-      }),
+      validate(createRelationshipSchema),
       (req, res, next) => this.relationshipController.createRelationship(req, res, next)
     );
   }
@@ -206,5 +189,4 @@ export class FamilyTreeRoutes {
     }
   };
 }
-
 export default new FamilyTreeRoutes().router;
