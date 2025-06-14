@@ -1,30 +1,41 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+
+// Mock axios first before importing modules that use it
+const mockAxiosInstance = {
+  get: vi.fn(),
+  post: vi.fn(),
+  put: vi.fn(),
+  patch: vi.fn(),
+  delete: vi.fn(),
+  request: vi.fn(),
+  interceptors: {
+    request: {
+      use: vi.fn(),
+      eject: vi.fn(),
+    },
+    response: {
+      use: vi.fn((onFulfilled, onRejected) => {
+        // Store the error handler for testing 401 responses
+        mockAxiosInstance.interceptors.response.errorHandler = onRejected;
+        return 1;
+      }),
+      errorHandler: null,
+      eject: vi.fn(),
+    },
+  },
+};
+
+vi.mock('axios', () => ({
+  default: {
+    create: vi.fn(() => mockAxiosInstance),
+  },
+  isAxiosError: (error: any) => error && error.isAxiosError === true,
+}));
+
+// Import after mocking
 import { apiService, ApiError } from '../../src/services/api.service';
 import { useAuthStore } from '../../src/stores/auth.store';
 import { useLoadingStore } from '../../src/stores/loading.store';
-
-// Mock axios
-vi.mock('axios', () => {
-  const mockAxios = {
-    create: vi.fn(() => mockAxios),
-    interceptors: {
-      request: {
-        use: vi.fn(),
-        eject: vi.fn(),
-      },
-      response: {
-        use: vi.fn(),
-        eject: vi.fn(),
-      },
-    },
-    get: vi.fn(),
-    post: vi.fn(),
-    put: vi.fn(),
-    patch: vi.fn(),
-    delete: vi.fn(),
-  };
-  return { default: mockAxios };
-});
 
 describe('API Service', () => {
   beforeEach(() => {
@@ -32,6 +43,9 @@ describe('API Service', () => {
     localStorage.clear();
     useAuthStore.setState({ token: null });
     useLoadingStore.setState({ loadingStates: new Map(), globalLoading: false });
+    
+    // Ensure apiService uses the mock
+    apiService.axios = mockAxiosInstance;
   });
 
   afterEach(() => {
@@ -66,52 +80,72 @@ describe('API Service', () => {
   describe('HTTPメソッド', () => {
     it('GET リクエストが正しく実行されること', async () => {
       const mockData = { id: 1, name: 'Test' };
-      apiService.axios.get.mockResolvedValueOnce({ data: mockData });
+      apiService.axios.request.mockResolvedValueOnce({ data: mockData });
 
       const result = await apiService.get('/test');
       
-      expect(apiService.axios.get).toHaveBeenCalledWith('/test', expect.any(Object));
+      expect(apiService.axios.request).toHaveBeenCalledWith({
+        method: 'get',
+        url: '/test',
+        data: undefined,
+      });
       expect(result).toEqual(mockData);
     });
 
     it('POST リクエストが正しく実行されること', async () => {
       const postData = { name: 'New Item' };
       const mockResponse = { id: 1, ...postData };
-      apiService.axios.post.mockResolvedValueOnce({ data: mockResponse });
+      apiService.axios.request.mockResolvedValueOnce({ data: mockResponse });
 
       const result = await apiService.post('/test', postData);
       
-      expect(apiService.axios.post).toHaveBeenCalledWith('/test', postData, expect.any(Object));
+      expect(apiService.axios.request).toHaveBeenCalledWith({
+        method: 'post',
+        url: '/test',
+        data: postData,
+      });
       expect(result).toEqual(mockResponse);
     });
 
     it('PUT リクエストが正しく実行されること', async () => {
       const putData = { id: 1, name: 'Updated Item' };
-      apiService.axios.put.mockResolvedValueOnce({ data: putData });
+      apiService.axios.request.mockResolvedValueOnce({ data: putData });
 
       const result = await apiService.put('/test/1', putData);
       
-      expect(apiService.axios.put).toHaveBeenCalledWith('/test/1', putData, expect.any(Object));
+      expect(apiService.axios.request).toHaveBeenCalledWith({
+        method: 'put',
+        url: '/test/1',
+        data: putData,
+      });
       expect(result).toEqual(putData);
     });
 
     it('PATCH リクエストが正しく実行されること', async () => {
       const patchData = { name: 'Patched Item' };
       const mockResponse = { id: 1, name: 'Patched Item', updated: true };
-      apiService.axios.patch.mockResolvedValueOnce({ data: mockResponse });
+      apiService.axios.request.mockResolvedValueOnce({ data: mockResponse });
 
       const result = await apiService.patch('/test/1', patchData);
       
-      expect(apiService.axios.patch).toHaveBeenCalledWith('/test/1', patchData, expect.any(Object));
+      expect(apiService.axios.request).toHaveBeenCalledWith({
+        method: 'patch',
+        url: '/test/1',
+        data: patchData,
+      });
       expect(result).toEqual(mockResponse);
     });
 
     it('DELETE リクエストが正しく実行されること', async () => {
-      apiService.axios.delete.mockResolvedValueOnce({ data: { success: true } });
+      apiService.axios.request.mockResolvedValueOnce({ data: { success: true } });
 
       const result = await apiService.delete('/test/1');
       
-      expect(apiService.axios.delete).toHaveBeenCalledWith('/test/1', expect.any(Object));
+      expect(apiService.axios.request).toHaveBeenCalledWith({
+        method: 'delete',
+        url: '/test/1',
+        data: undefined,
+      });
       expect(result).toEqual({ success: true });
     });
   });
@@ -119,12 +153,13 @@ describe('API Service', () => {
   describe('エラーハンドリング', () => {
     it('4xx エラーが適切にハンドリングされること', async () => {
       const errorResponse = {
+        isAxiosError: true,
         response: {
           status: 400,
           data: { message: 'Bad Request' },
         },
       };
-      apiService.axios.get.mockRejectedValueOnce(errorResponse);
+      apiService.axios.request.mockRejectedValueOnce(errorResponse);
 
       await expect(apiService.get('/test')).rejects.toThrow(ApiError);
       
@@ -138,15 +173,24 @@ describe('API Service', () => {
     });
 
     it('401 エラーで認証情報がクリアされること', async () => {
-      useAuthStore.setState({ token: 'test-token', user: { id: '1' } });
+      useAuthStore.setState({ token: 'test-token', user: { id: '1', email: 'test@example.com', name: 'Test' } });
       
       const errorResponse = {
+        isAxiosError: true,
         response: {
           status: 401,
           data: { message: 'Unauthorized' },
         },
       };
-      apiService.axios.get.mockRejectedValueOnce(errorResponse);
+      
+      // Mock the request to trigger the interceptor
+      apiService.axios.request.mockImplementationOnce(() => {
+        // Trigger the response error interceptor
+        if (mockAxiosInstance.interceptors.response.errorHandler) {
+          mockAxiosInstance.interceptors.response.errorHandler(errorResponse);
+        }
+        return Promise.reject(errorResponse);
+      });
 
       try {
         await apiService.get('/test');
@@ -159,12 +203,13 @@ describe('API Service', () => {
 
     it('5xx エラーが適切にハンドリングされること', async () => {
       const errorResponse = {
+        isAxiosError: true,
         response: {
           status: 500,
           data: { message: 'Internal Server Error' },
         },
       };
-      apiService.axios.get.mockRejectedValueOnce(errorResponse);
+      apiService.axios.request.mockRejectedValueOnce(errorResponse);
 
       await expect(apiService.get('/test')).rejects.toThrow(ApiError);
       
@@ -179,7 +224,7 @@ describe('API Service', () => {
 
     it('ネットワークエラーが適切にハンドリングされること', async () => {
       const networkError = new Error('Network Error');
-      apiService.axios.get.mockRejectedValueOnce(networkError);
+      apiService.axios.request.mockRejectedValueOnce(networkError);
 
       try {
         await apiService.get('/test');
@@ -196,7 +241,7 @@ describe('API Service', () => {
       const loadingStore = useLoadingStore.getState();
       const setLoadingSpy = vi.spyOn(loadingStore, 'setLoading');
 
-      apiService.axios.get.mockImplementation(() => 
+      apiService.axios.request.mockImplementation(() => 
         new Promise(resolve => setTimeout(() => resolve({ data: {} }), 100))
       );
 
@@ -215,7 +260,7 @@ describe('API Service', () => {
       const loadingStore = useLoadingStore.getState();
       const setLoadingSpy = vi.spyOn(loadingStore, 'setLoading');
 
-      apiService.axios.get.mockRejectedValueOnce(new Error('Test Error'));
+      apiService.axios.request.mockRejectedValueOnce(new Error('Test Error'));
 
       try {
         await apiService.get('/test', { loadingKey: 'test-loading' });
@@ -229,7 +274,7 @@ describe('API Service', () => {
   describe('リトライ機能', () => {
     it('指定回数リトライが実行されること', async () => {
       let attempts = 0;
-      apiService.axios.get.mockImplementation(() => {
+      apiService.axios.request.mockImplementation(() => {
         attempts++;
         if (attempts < 3) {
           return Promise.reject(new Error('Temporary Error'));
@@ -244,13 +289,13 @@ describe('API Service', () => {
     });
 
     it('リトライ回数を超えた場合エラーがスローされること', async () => {
-      apiService.axios.get.mockRejectedValue(new Error('Persistent Error'));
+      apiService.axios.request.mockRejectedValue(new Error('Persistent Error'));
 
       await expect(
         apiService.get('/test', { retry: 2, retryDelay: 10 })
       ).rejects.toThrow('Persistent Error');
       
-      expect(apiService.axios.get).toHaveBeenCalledTimes(3); // 初回 + 2回リトライ
+      expect(apiService.axios.request).toHaveBeenCalledTimes(3); // 初回 + 2回リトライ
     });
   });
 });

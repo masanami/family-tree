@@ -61,16 +61,20 @@ describe('Auth Store', () => {
 
       let loadingStateDuringLogin = false;
 
-      const loginPromise = act(async () => {
-        await result.current.login('test@example.com', 'password');
+      // Start login without await to check loading state
+      act(() => {
+        result.current.login('test@example.com', 'password').then(() => {
+          // Login completed
+        });
       });
 
       // Check loading state immediately after starting login
-      if (result.current.isLoading) {
-        loadingStateDuringLogin = true;
-      }
+      loadingStateDuringLogin = result.current.isLoading;
 
-      await loginPromise;
+      // Wait for login to complete
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      });
 
       expect(loadingStateDuringLogin).toBe(true);
       expect(result.current.isLoading).toBe(false);
