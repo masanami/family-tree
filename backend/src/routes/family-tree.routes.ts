@@ -1,12 +1,18 @@
 import { Router, Request, Response } from 'express';
 import { validate } from '../middleware/validation';
 import { familyTreeSchema } from '../schemas/family-tree.schema';
+import { createRelationshipSchema } from '../schemas/relationship.schema';
+import { RelationshipController } from '../controllers/relationship.controller';
+import { RelationshipService } from '../services/relationship.service';
 
 export class FamilyTreeRoutes {
   public router: Router;
+  private relationshipController: RelationshipController;
   
   constructor() {
     this.router = Router();
+    const relationshipService = new RelationshipService();
+    this.relationshipController = new RelationshipController(relationshipService);
     this.initializeRoutes();
   }
   
@@ -25,6 +31,17 @@ export class FamilyTreeRoutes {
     
     // DELETE /api/family-trees/:id - Delete family tree
     this.router.delete('/:id', this.deleteFamilyTree);
+
+    // GET /api/v1/family-trees/:treeId/relationships
+    this.router.get('/:treeId/relationships', 
+      (req, res, next) => this.relationshipController.getRelationshipsByFamilyTree(req, res, next)
+    );
+
+    // POST /api/v1/family-trees/:treeId/relationships
+    this.router.post('/:treeId/relationships',
+      validate(createRelationshipSchema),
+      (req, res, next) => this.relationshipController.createRelationship(req, res, next)
+    );
   }
   
   private getAllFamilyTrees = async (_req: Request, res: Response): Promise<void> => {
@@ -172,5 +189,4 @@ export class FamilyTreeRoutes {
     }
   };
 }
-
 export default new FamilyTreeRoutes().router;
