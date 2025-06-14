@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError, isAxiosError } from 'axios';
+import axios, { type AxiosInstance, AxiosError, isAxiosError } from 'axios';
 import { useAuthStore } from '../stores/auth.store';
 import { useLoadingStore } from '../stores/loading.store';
 import type { ApiRequestOptions, ApiErrorResponse } from '../types/api.types';
@@ -114,7 +114,7 @@ class ApiService {
           axiosError.response?.data
         );
       }
-      throw new ApiError(error.message, 0);
+      throw new ApiError((error as Error).message, 0);
     } finally {
       // Clear loading state if key provided
       if (loadingKey) {

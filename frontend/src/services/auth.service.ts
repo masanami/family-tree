@@ -2,7 +2,6 @@ import { apiService } from './api.service';
 import { API_ENDPOINTS } from '../constants/api.constants';
 import type {
   User,
-  LoginRequest,
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
