@@ -1,24 +1,15 @@
 import { create } from 'zustand';
 import { authService } from '../services/auth.service';
+import type { User, AuthState as AuthStateType } from '../types/auth.types';
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-}
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  
+interface AuthState extends AuthStateType {
   // Actions
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
   initializeAuth: () => void;
+  setUser: (user: User | null) => void;
+  setToken: (token: string | null) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -77,5 +68,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (token) {
       set({ token });
     }
+  },
+
+  setUser: (user: User | null) => {
+    set({ user });
+  },
+
+  setToken: (token: string | null) => {
+    set({ token });
   },
 }));

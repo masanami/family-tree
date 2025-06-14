@@ -1,23 +1,18 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosError, isAxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosError, isAxiosError } from 'axios';
 import { useAuthStore } from '../stores/auth.store';
 import { useLoadingStore } from '../stores/loading.store';
+import type { ApiRequestOptions, ApiErrorResponse } from '../types/api.types';
 
 export class ApiError extends Error {
   status: number;
-  data?: any;
+  data?: ApiErrorResponse;
 
-  constructor(message: string, status: number, data?: any) {
+  constructor(message: string, status: number, data?: ApiErrorResponse) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.data = data;
   }
-}
-
-interface RequestOptions extends AxiosRequestConfig {
-  loadingKey?: string;
-  retry?: number;
-  retryDelay?: number;
 }
 
 class ApiService {
@@ -88,7 +83,7 @@ class ApiService {
     method: string,
     url: string,
     data?: any,
-    options: RequestOptions = {}
+    options: ApiRequestOptions = {}
   ): Promise<T> {
     const { loadingKey, retry = 0, retryDelay = 1000, ...axiosOptions } = options;
 
@@ -128,23 +123,23 @@ class ApiService {
     }
   }
 
-  async get<T>(url: string, options?: RequestOptions): Promise<T> {
+  async get<T>(url: string, options?: ApiRequestOptions): Promise<T> {
     return this.request<T>('get', url, undefined, options);
   }
 
-  async post<T>(url: string, data?: any, options?: RequestOptions): Promise<T> {
+  async post<T>(url: string, data?: any, options?: ApiRequestOptions): Promise<T> {
     return this.request<T>('post', url, data, options);
   }
 
-  async put<T>(url: string, data?: any, options?: RequestOptions): Promise<T> {
+  async put<T>(url: string, data?: any, options?: ApiRequestOptions): Promise<T> {
     return this.request<T>('put', url, data, options);
   }
 
-  async patch<T>(url: string, data?: any, options?: RequestOptions): Promise<T> {
+  async patch<T>(url: string, data?: any, options?: ApiRequestOptions): Promise<T> {
     return this.request<T>('patch', url, data, options);
   }
 
-  async delete<T>(url: string, options?: RequestOptions): Promise<T> {
+  async delete<T>(url: string, options?: ApiRequestOptions): Promise<T> {
     return this.request<T>('delete', url, undefined, options);
   }
 }
