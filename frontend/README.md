@@ -1,54 +1,47 @@
-# React + TypeScript + Vite
+# Family Tree Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite + Tailwind CSS を使用したファミリーツリーアプリケーションのフロントエンド。
 
-Currently, two official plugins are available:
+## 技術スタック
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19** - UIライブラリ
+- **TypeScript** - 型安全性
+- **Vite** - 高速な開発サーバーとビルドツール
+- **Tailwind CSS** - ユーティリティファーストのCSSフレームワーク
+- **ESLint** - コード品質管理
 
-## Expanding the ESLint configuration
+## ディレクトリ構造
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+src/
+├── components/   # 再利用可能なUIコンポーネント
+├── pages/       # ページコンポーネント
+├── hooks/       # カスタムReactフック
+├── services/    # APIクライアントとサービス
+├── types/       # TypeScript型定義
+└── utils/       # ユーティリティ関数
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 開発
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# 開発サーバー起動
+npm run dev
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+# ビルド
+npm run build
+
+# プレビュー
+npm run preview
+
+# リント
+npm run lint
+```
+
+## 環境変数
+
+`.env.local` ファイルを作成して環境変数を設定：
+
+```
+VITE_API_URL=http://localhost:8000
 ```
