@@ -1,3 +1,4 @@
+// Person types for family tree application
 export interface Person {
   id: string;
   firstName: string;
