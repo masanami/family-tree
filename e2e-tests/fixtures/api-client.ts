@@ -73,9 +73,9 @@ export class ApiClient {
 
       return {
         success: response.ok,
-        data: responseData,
+        data: response.ok ? (responseData.data || responseData) : undefined,
         statusCode: response.status,
-        error: !response.ok ? responseData.message || 'Request failed' : undefined,
+        error: !response.ok ? responseData.error?.message || responseData.message || 'Request failed' : undefined,
       };
     } catch (error) {
       return {
@@ -195,9 +195,9 @@ export class ApiClient {
     } else {
       // Clean up all test family trees (those with test prefix)
       const response = await this.getFamilyTrees();
-      if (response.success && response.data) {
+      if (response.success && response.data && Array.isArray(response.data)) {
         for (const familyTree of response.data) {
-          if (familyTree.name.startsWith('Test') || familyTree.name.startsWith('E2E')) {
+          if (familyTree.name && (familyTree.name.startsWith('Test') || familyTree.name.startsWith('E2E'))) {
             await this.deleteFamilyTree(familyTree.id);
           }
         }
