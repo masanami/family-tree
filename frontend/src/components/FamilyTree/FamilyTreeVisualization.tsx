@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
+// Optimized imports - only import what we need
 import { 
   ReactFlow, 
   Controls, 
-  MiniMap, 
   Background, 
   useNodesState, 
   useEdgesState
@@ -322,7 +322,6 @@ export const FamilyTreeVisualization = React.memo<FamilyTreeVisualizationProps>(
           tabIndex={0}
         >
           <Controls />
-          <MiniMap />
           <Background />
         </ReactFlow>
 

@@ -1,0 +1,139 @@
+{
+  "timestamp": "2025-06-14T18:21:55.396Z",
+  "dependencies": {
+    "deps": {
+      "@tailwindcss/postcss": "^4.1.10",
+      "@testing-library/dom": "^10.4.0",
+      "axios": "^1.10.0",
+      "react": "^19.1.0",
+      "react-dom": "^19.1.0",
+      "react-router-dom": "^7.6.2",
+      "reactflow": "^11.11.4",
+      "zustand": "^5.0.5"
+    },
+    "devDeps": {
+      "@eslint/js": "^9.25.0",
+      "@testing-library/jest-dom": "^6.6.3",
+      "@testing-library/react": "^16.1.0",
+      "@testing-library/user-event": "^14.5.2",
+      "@types/react": "^19.1.2",
+      "@types/react-dom": "^19.1.2",
+      "@typescript-eslint/eslint-plugin": "^8.0.0",
+      "@typescript-eslint/parser": "^8.0.0",
+      "@vitejs/plugin-react": "^4.4.1",
+      "@vitest/coverage-v8": "^2.1.6",
+      "@vitest/ui": "^2.1.6",
+      "autoprefixer": "^10.4.21",
+      "eslint": "^9.25.0",
+      "eslint-plugin-react-hooks": "^5.2.0",
+      "eslint-plugin-react-refresh": "^0.4.19",
+      "globals": "^16.0.0",
+      "jsdom": "^26.1.0",
+      "postcss": "^8.5.5",
+      "rollup-plugin-visualizer": "^6.0.3",
+      "tailwindcss": "^4.1.10",
+      "typescript": "~5.8.3",
+      "typescript-eslint": "^8.30.1",
+      "vite": "^6.3.5",
+      "vite-bundle-analyzer": "^0.22.3",
+      "vitest": "^2.1.6"
+    }
+  },
+  "analysis": {
+    "total": 33,
+    "used": [
+      "react",
+      "react-router-dom",
+      "@testing-library/react",
+      "vitest",
+      "@testing-library/user-event",
+      "react-dom",
+      "axios",
+      "zustand",
+      "@testing-library/jest-dom"
+    ],
+    "unused": [
+      "@tailwindcss/postcss",
+      "@testing-library/dom",
+      "reactflow",
+      "@eslint/js",
+      "@types/react",
+      "@types/react-dom",
+      "@typescript-eslint/eslint-plugin",
+      "@typescript-eslint/parser",
+      "@vitejs/plugin-react",
+      "@vitest/coverage-v8",
+      "@vitest/ui",
+      "autoprefixer",
+      "eslint",
+      "eslint-plugin-react-hooks",
+      "eslint-plugin-react-refresh",
+      "globals",
+      "jsdom",
+      "postcss",
+      "rollup-plugin-visualizer",
+      "tailwindcss",
+      "typescript",
+      "typescript-eslint",
+      "vite",
+      "vite-bundle-analyzer"
+    ],
+    "usageRate": "27.3"
+  },
+  "optimizations": [
+    {
+      "type": "remove-unused-deps",
+      "priority": "high",
+      "description": "Remove 24 unused dependencies",
+      "dependencies": [
+        "@tailwindcss/postcss",
+        "@testing-library/dom",
+        "reactflow",
+        "@eslint/js",
+        "@types/react",
+        "@types/react-dom",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
+        "@vitejs/plugin-react",
+        "@vitest/coverage-v8",
+        "@vitest/ui",
+        "autoprefixer",
+        "eslint",
+        "eslint-plugin-react-hooks",
+        "eslint-plugin-react-refresh",
+        "globals",
+        "jsdom",
+        "postcss",
+        "rollup-plugin-visualizer",
+        "tailwindcss",
+        "typescript",
+        "typescript-eslint",
+        "vite",
+        "vite-bundle-analyzer"
+      ],
+      "impact": "Reduce bundle size by ~240KB"
+    },
+    {
+      "type": "optimize-dependency",
+      "priority": "medium",
+      "description": "Consider optimizing reactflow",
+      "alternative": "Custom implementation for specific use case",
+      "impact": "~50KB",
+      "dependency": "reactflow"
+    },
+    {
+      "type": "optimize-dependency",
+      "priority": "medium",
+      "description": "Consider optimizing axios",
+      "alternative": "Native fetch API",
+      "impact": "~15KB",
+      "dependency": "axios"
+    }
+  ],
+  "summary": {
+    "totalDependencies": 33,
+    "unusedCount": 24,
+    "potentialSavings": "240KB",
+    "usageEfficiency": "27.3%"
+  }
+}

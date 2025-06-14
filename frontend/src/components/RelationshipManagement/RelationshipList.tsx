@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Button } from '../../../issue-37-person-management/frontend/src/components/UI/Button';
-import { Modal } from '../../../issue-37-person-management/frontend/src/components/UI/Modal';
-import { Input } from '../../../issue-37-person-management/frontend/src/components/UI/Input';
+import { Button } from '../UI/Button';
+import { Modal } from '../UI/Modal';
+import { Input } from '../UI/Input';
 import { useRelationship } from '../../hooks/useRelationship';
 import type { Person } from '../../types/person';
 import type { Relationship, RelationshipType } from '../../types/relationship';
