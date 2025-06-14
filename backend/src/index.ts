@@ -1,6 +1,8 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { FamilyTreeRoutes } from './routes/family-tree.routes';
+import { PersonRoutes } from './routes/person.routes';
 
 dotenv.config();
 
@@ -28,6 +30,14 @@ app.get('/', (_req: Request, res: Response) => {
     version: '1.0.0'
   });
 });
+
+// API Routes
+const familyTreeRoutes = new FamilyTreeRoutes();
+const personRoutes = new PersonRoutes();
+
+app.use('/api/family-trees', familyTreeRoutes.router);
+app.use('/api/family-trees/:treeId/persons', personRoutes.getTreePersonsRouter());
+app.use('/api/persons', personRoutes.getPersonRouter());
 
 // Start server
 app.listen(PORT, () => {
