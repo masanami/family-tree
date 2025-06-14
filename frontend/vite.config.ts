@@ -44,5 +44,10 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
     exclude: ['reactflow'] // Let it be code-split
-  }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+  },
 })
