@@ -206,3 +206,5 @@ export class PersonRoutes {
     }
   };
 }
+
+export default new PersonRoutes();
