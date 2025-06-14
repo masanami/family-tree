@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-06-14T18:25:15.048Z",
+  "totalJSSize": 423453,
+  "totalCSSSize": 7931,
+  "totalSize": 431384,
+  "jsFiles": 15,
+  "cssFiles": 1,
+  "breakdown": {
+    "javascript": "413.53 KB",
+    "css": "7.75 KB",
+    "total": "421.27 KB"
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "type": "bundle-splitting",
+      "description": "JavaScript bundle exceeds 200KB - implement code splitting",
+      "impact": "Reduce initial load time by 20-30%"
+    },
+    {
+      "priority": "medium",
+      "type": "lazy-loading",
+      "description": "Implement lazy loading for FamilyTree visualization",
+      "impact": "Reduce initial bundle size by 30-40%"
+    },
+    {
+      "priority": "low",
+      "type": "compression",
+      "description": "Enable Brotli compression on server",
+      "impact": "Reduce transfer size by additional 10-15%"
+    }
+  ],
+  "analysis": {
+    "bundleEfficiency": "needs-improvement",
+    "loadTimeEstimate": {
+      "fast3g": "264s",
+      "slow3g": "1054s",
+      "wifi": "17s"
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "timestamp": "2025-06-14T18:24:26.313Z",
+  "analysis": {
+    "totalFiles": 44,
+    "filesWithExports": 40,
+    "filesWithImports": 25,
+    "unusedExports": {
+      "App.tsx": [
+        "App"
+      ],
+      "Router.tsx": [
+        "AppRouter"
+      ],
+      "components/ErrorBoundary.tsx": [
+        "ErrorBoundary"
+      ],
+      "components/FamilyTree/FamilyTreeEdge.tsx": [
+        "FamilyTreeEdge"
+      ],
+      "components/FamilyTree/FamilyTreeNode.tsx": [
+        "FamilyTreeNode"
+      ],
+      "components/FamilyTree/FamilyTreeVisualization.tsx": [
+        "FamilyTreeVisualization"
+      ],
+      "components/FamilyTree/FamilyTreeVisualizationLazy.tsx": [
+        "FamilyTreeVisualizationLazy"
+      ],
+      "components/LoadingSpinner.tsx": [
+        "LoadingSpinner",
+        "PageLoadingSpinner",
+        "ComponentLoadingSpinner",
+        "InlineLoadingSpinner"
+      ],
+      "components/PersonManagement/PersonCard.tsx": [
+        "PersonCard"
+      ],
+      "components/PersonManagement/PersonDetailModal.tsx": [
+        "PersonDetailModal"
+      ],
+      "components/PersonManagement/PersonForm.tsx": [
+        "PersonForm"
+      ],
+      "components/PersonManagement/PersonManagementLazy.tsx": [
+        "PersonFormLazy",
+        "PersonCardLazy",
+        "PersonDetailModalLazy"
+      ],
+      "components/RelationshipManagement/RelationshipCreator.tsx": [
+        "RelationshipCreator"
+      ],
+      "components/RelationshipManagement/RelationshipList.tsx": [
+        "RelationshipList"
+      ],
+      "components/RelationshipManagement/RelationshipManagementLazy.tsx": [
+        "RelationshipCreatorLazy",
+        "RelationshipListLazy"
+      ],
+      "components/RelationshipManagement/index.ts": [
+        "RelationshipCreator ",
+        "RelationshipList "
+      ],
+      "components/UI/Button.tsx": [
+        "Button"
+      ],
+      "components/UI/Input.tsx": [
+        "Input"
+      ],
+      "components/UI/Modal.tsx": [
+        "Modal"
+      ],
+      "constants/api.constants.ts": [
+        "API_ENDPOINTS",
+        "HTTP_STATUS"
+      ],
+      "hooks/index.ts": [
+        "useRelationship ",
+        "useDragDrop "
+      ],
+      "hooks/useAuth.ts": [
+        "useAuth"
+      ],
+      "hooks/useDragDrop.ts": [
+        "useDragDrop"
+      ],
+      "hooks/useLoading.ts": [
+        "useLoading"
+      ],
+      "hooks/useRelationship.ts": [
+        "useRelationship"
+      ],
+      "pages/FamilyTreePage.tsx": [
+        "FamilyTreePage"
+      ],
+      "pages/PersonManagementPage.tsx": [
+        "PersonManagementPage"
+      ],
+      "pages/RelationshipManagementPage.tsx": [
+        "RelationshipManagementPage"
+      ],
+      "services/api.service.ts": [
+        "ApiError",
+        "apiService"
+      ],
+      "services/auth.service.ts": [
+        "authService"
+      ],
+      "services/index.ts": [
+        "apiService",
+        "ApiError",
+        "authService "
+      ],
+      "stores/auth.store.ts": [
+        "useAuthStore"
+      ],
+      "stores/index.ts": [
+        "useAuthStore ",
+        "useLoadingStore "
+      ],
+      "stores/loading.store.ts": [
+        "useLoadingStore"
+      ],
+      "types/api.types.ts": [
+        "ApiRequestOptions",
+        "ApiErrorResponse",
+        "PaginatedResponse"
+      ],
+      "types/auth.types.ts": [
+        "User",
+        "LoginRequest",
+        "LoginResponse",
+        "RegisterRequest",
+        "RegisterResponse",
+        "AuthState",
+        "ForgotPasswordRequest",
+        "ForgotPasswordResponse",
+        "ResetPasswordRequest",
+        "ResetPasswordResponse",
+        "ValidateTokenResponse"
+      ],
+      "types/family-tree.ts": [
+        "FamilyTreeNode",
+        "FamilyTreeEdge",
+        "FamilyTreeData",
+        "FamilyTreeLayoutOptions"
+      ],
+      "types/person.ts": [
+        "Person",
+        "PersonFormData"
+      ],
+      "types/relationship.ts": [
+        "RelationshipType",
+        "Relationship",
+        "RelationshipFormData",
+        "CreateRelationshipRequest",
+        "UpdateRelationshipRequest",
+        "DragDropContext",
+        "RelationshipValidation",
+        "RelationshipConstraints"
+      ],
+      "utils/familyTreeLayout.ts": [
+        "generateFamilyTreeLayout",
+        "calculateNodePositions",
+        "createFamilyTreeFromPersons",
+        "validateFamilyTreeData"
+      ]
+    }
+  },
+  "heavyDependencies": [
+    {
+      "name": "reactflow",
+      "size": "~120KB",
+      "optimizations": [
+        "Use only needed components",
+        "Custom node implementation"
+      ]
+    },
+    {
+      "name": "react-router-dom",
+      "size": "~45KB",
+      "optimizations": [
+        "Consider reach/router alternative",
+        "Use only required components"
+      ]
+    },
+    {
+      "name": "zustand",
+      "size": "~12KB",
+      "optimizations": [
+        "Already lightweight",
+        "Consider if complex state needed"
+      ]
+    },
+    {
+      "name": "axios",
+      "size": "~15KB",
+      "optimizations": [
+        "Replace with native fetch",
+        "Custom HTTP client"
+      ]
+    }
+  ],
+  "optimizations": [
+    {
+      "type": "reactflow-optimization",
+      "priority": "high",
+      "description": "Optimize ReactFlow imports and usage",
+      "potentialSavings": "40-60KB"
+    },
+    {
+      "type": "router-optimization",
+      "priority": "medium",
+      "description": "Optimize React Router tree shaking",
+      "potentialSavings": "15-25KB"
+    },
+    {
+      "type": "tree-shaking",
+      "priority": "medium",
+      "description": "Enable aggressive tree shaking",
+      "potentialSavings": "10-20KB"
+    }
+  ]
+}
