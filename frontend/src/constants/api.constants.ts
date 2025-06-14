@@ -19,10 +19,22 @@ export const API_ENDPOINTS = {
   
   // Family tree endpoints
   FAMILY_TREES: {
-    BASE: '/family-trees',
-    BY_ID: (id: string) => `/family-trees/${id}`,
-    MEMBERS: (id: string) => `/family-trees/${id}/members`,
-    RELATIONSHIPS: (id: string) => `/family-trees/${id}/relationships`,
+    BASE: '/api/family-trees',
+    BY_ID: (id: string) => `/api/family-trees/${id}`,
+    PERSONS: (treeId: string) => `/api/family-trees/${treeId}/persons`,
+    MEMBERS: (id: string) => `/api/family-trees/${id}/members`,
+    RELATIONSHIPS: (id: string) => `/api/v1/family-trees/${id}/relationships`,
+  },
+
+  // Person endpoints
+  PERSONS: {
+    BY_ID: (id: string) => `/api/persons/${id}`,
+  },
+
+  // Relationship endpoints
+  RELATIONSHIPS: {
+    BASE: (familyTreeId: string) => `/api/v1/family-trees/${familyTreeId}/relationships`,
+    BY_ID: (familyTreeId: string, relationshipId: string) => `/api/v1/family-trees/${familyTreeId}/relationships/${relationshipId}`,
   },
 } as const;
 
