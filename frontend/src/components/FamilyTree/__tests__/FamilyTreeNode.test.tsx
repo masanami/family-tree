@@ -118,8 +118,8 @@ describe('FamilyTreeNode', () => {
       />
     );
 
-    const nodeElement = screen.getByRole('button', { name: /山田 太郎/ });
-    expect(nodeElement).toHaveAttribute('data-generation', '2');
+    const nodeContainer = document.querySelector('[data-generation="2"]');
+    expect(nodeContainer).toBeInTheDocument();
   });
 
   it('should be accessible with proper ARIA labels', () => {

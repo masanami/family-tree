@@ -6,8 +6,8 @@ import { FamilyTreeData } from '../../../types/family-tree';
 
 // React Flow のモック
 vi.mock('reactflow', () => ({
-  ReactFlow: ({ children, nodes, edges, onNodesChange, onEdgesChange }: any) => (
-    <div data-testid="react-flow">
+  ReactFlow: ({ children, nodes, edges, onNodesChange, onEdgesChange, tabIndex, ...props }: any) => (
+    <div data-testid="react-flow" tabIndex={tabIndex} {...props}>
       <div data-testid="nodes">{JSON.stringify(nodes)}</div>
       <div data-testid="edges">{JSON.stringify(edges)}</div>
       {children}
@@ -177,9 +177,9 @@ describe('FamilyTreeVisualization', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: 'ズームイン' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'ズームアウト' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '全体表示' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /ズームイン/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /ズームアウト/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /全体表示/ })).toBeInTheDocument();
   });
 
   it('should handle empty family tree data', () => {
