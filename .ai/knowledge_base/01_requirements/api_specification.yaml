@@ -1,0 +1,423 @@
+openapi: 3.0.0
+info:
+  title: Family Tree API
+  version: 1.0.0
+  description: 家系図作成アプリケーションのAPI仕様
+
+servers:
+  - url: http://localhost:3000/api
+    description: 開発環境
+
+paths:
+  /family-trees:
+    get:
+      summary: 家系図一覧取得
+      tags:
+        - FamilyTree
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FamilyTree'
+    
+    post:
+      summary: 家系図作成
+      tags:
+        - FamilyTree
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/FamilyTree'
+
+  /family-trees/{id}:
+    get:
+      summary: 家系図詳細取得
+      tags:
+        - FamilyTree
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/FamilyTreeDetail'
+    
+    put:
+      summary: 家系図更新
+      tags:
+        - FamilyTree
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: 更新成功
+    
+    delete:
+      summary: 家系図削除
+      tags:
+        - FamilyTree
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 削除成功
+
+  /family-trees/{treeId}/persons:
+    get:
+      summary: 人物一覧取得
+      tags:
+        - Person
+      parameters:
+        - name: treeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Person'
+    
+    post:
+      summary: 人物作成
+      tags:
+        - Person
+      parameters:
+        - name: treeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonInput'
+      responses:
+        '201':
+          description: 作成成功
+
+  /persons/{id}:
+    get:
+      summary: 人物詳細取得
+      tags:
+        - Person
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+    
+    put:
+      summary: 人物更新
+      tags:
+        - Person
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonInput'
+      responses:
+        '200':
+          description: 更新成功
+    
+    delete:
+      summary: 人物削除
+      tags:
+        - Person
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 削除成功
+
+  /family-trees/{treeId}/relationships:
+    get:
+      summary: 関係性一覧取得
+      tags:
+        - Relationship
+      parameters:
+        - name: treeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+    
+    post:
+      summary: 関係性作成
+      tags:
+        - Relationship
+      parameters:
+        - name: treeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipInput'
+      responses:
+        '201':
+          description: 作成成功
+
+  /relationships/{id}:
+    put:
+      summary: 関係性更新
+      tags:
+        - Relationship
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipInput'
+      responses:
+        '200':
+          description: 更新成功
+    
+    delete:
+      summary: 関係性削除
+      tags:
+        - Relationship
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 削除成功
+
+components:
+  schemas:
+    FamilyTree:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    FamilyTreeDetail:
+      allOf:
+        - $ref: '#/components/schemas/FamilyTree'
+        - type: object
+          properties:
+            persons:
+              type: array
+              items:
+                $ref: '#/components/schemas/Person'
+            relationships:
+              type: array
+              items:
+                $ref: '#/components/schemas/Relationship'
+    
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+        familyTreeId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        deathDate:
+          type: string
+          format: date
+          nullable: true
+        gender:
+          type: string
+          enum: [male, female, other]
+        photoUrl:
+          type: string
+          nullable: true
+        occupation:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    PersonInput:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - gender
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        deathDate:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [male, female, other]
+        photoUrl:
+          type: string
+        occupation:
+          type: string
+        location:
+          type: string
+        notes:
+          type: string
+    
+    Relationship:
+      type: object
+      properties:
+        id:
+          type: string
+        familyTreeId:
+          type: string
+        fromPersonId:
+          type: string
+        toPersonId:
+          type: string
+        relationshipType:
+          type: string
+          enum: [parent, child, spouse]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    RelationshipInput:
+      type: object
+      required:
+        - fromPersonId
+        - toPersonId
+        - relationshipType
+      properties:
+        fromPersonId:
+          type: string
+        toPersonId:
+          type: string
+        relationshipType:
+          type: string
+          enum: [parent, child, spouse]
