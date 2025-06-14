@@ -44,3 +44,10 @@ logs/
 # AI Framework
 .ai/logs/
 worktrees/
+node_modules/
+dist/
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
