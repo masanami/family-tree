@@ -91,7 +91,8 @@ user_instruction_required: "「エンジニアエージェントにタスクを�
 ### **フェーズ移行ルール**
 - **Phase 2完了後、必ずユーザー確認を取る**
 - **自動的にPhase 3に進まない**
-- **ユーザーから「Phase 3に進んでください」+ workflow_phase_3_parallel_implementation.md読み込み指示を待つ**
+- **🚨 MANDATORY: 次のように明確に指示する**
+- 「Phase 2完了。次フェーズへの移行指示のため、@ai-framework/06_multi_agent_operational_workflow.md をリーダーエージェントに読み込ませてください。」
 
 ---
 
