@@ -62,7 +62,7 @@ cd frontend && npm run dev
 ```
 
 開発サーバーが起動したら、ブラウザで http://localhost:5173 にアクセスしてください。
-バックエンドAPIは http://localhost:8000 で動作します。
+バックエンドAPIは http://localhost:4000 で動作します。
 
 ## 📁 プロジェクト構成
 
@@ -138,7 +138,7 @@ DATABASE_URL="file:./dev.db" npm run seed
 DATABASE_URL=postgresql://user:password@localhost:5432/family_tree
 
 # API設定
-PORT=8000
+PORT=4000
 NODE_ENV=production
 
 # その他
@@ -231,7 +231,7 @@ APIの詳細なドキュメントは[APIドキュメント](./docs/api.md)を参
 
 ### 主なエンドポイント
 
-- `GET /health` - ヘルスチェック
+- `GET /health` - ヘルスチェック（http://localhost:4000/health）
 - `GET /api/persons` - 人物一覧取得
 - `POST /api/persons` - 人物作成
 - `GET /api/relationships` - 関係性一覧取得
