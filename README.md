@@ -26,8 +26,8 @@ Family Tree Applicationは、家族の系譜を直感的に管理・可視化す
 ### 前提条件
 
 - Node.js v20.x以上
-- PostgreSQL v15以上
 - npm v10.x以上
+- PostgreSQL v15以上（本番環境のみ。開発環境ではSQLiteを使用）
 
 ### インストール
 
@@ -36,22 +36,33 @@ Family Tree Applicationは、家族の系譜を直感的に管理・可視化す
 git clone https://github.com/masanami/family-tree.git
 cd family-tree
 
-# 依存関係のインストール
-npm install
+# フロントエンドの依存関係のインストール
+cd frontend && npm install
+cd ..
 
-# 環境変数の設定
-cp .env.example .env
-# .envファイルを編集して必要な値を設定
+# バックエンドの依存関係のインストール
+cd backend && npm install
+cd ..
 
-# データベースの初期化
-npm run db:migrate
-npm run db:seed
+# データベースの初期化（SQLiteを使用）
+cd backend
+DATABASE_URL="file:./dev.db" npm run prisma:migrate
+# マイグレーション名を聞かれたら「init」と入力してください
+
+# シードデータの投入
+DATABASE_URL="file:./dev.db" npm run seed
+cd ..
 
 # 開発サーバーの起動
-npm run dev
+# ターミナル1: バックエンドサーバー
+cd backend && DATABASE_URL="file:./dev.db" npm run dev
+
+# ターミナル2: フロントエンドサーバー
+cd frontend && npm run dev
 ```
 
 開発サーバーが起動したら、ブラウザで http://localhost:5173 にアクセスしてください。
+バックエンドAPIは http://localhost:8000 で動作します。
 
 ## 📁 プロジェクト構成
 
@@ -97,7 +108,7 @@ family-tree/
 - **Node.js**: ランタイム
 - **Express.js**: Webフレームワーク
 - **TypeScript**: 型安全性
-- **PostgreSQL**: データベース
+- **SQLite**: データベース（開発環境）
 - **Prisma**: ORM
 - **Jest**: テストフレームワーク
 
@@ -109,27 +120,29 @@ family-tree/
 
 ## 🔧 環境変数
 
-`.env`ファイルに以下の環境変数を設定してください：
+開発環境では環境変数をコマンドライン引数で設定します。本番環境では`.env`ファイルを作成してください：
+
+### 開発環境（SQLite使用）
+```bash
+# バックエンドディレクトリで以下のコマンドを使用
+DATABASE_URL="file:./dev.db" npm run dev
+DATABASE_URL="file:./dev.db" npm run prisma:migrate
+DATABASE_URL="file:./dev.db" npm run seed
+```
+
+### 本番環境（PostgreSQL使用時）
+`backend/.env`ファイルを作成：
 
 ```bash
 # データベース設定
 DATABASE_URL=postgresql://user:password@localhost:5432/family_tree
-DATABASE_TEST_URL=postgresql://user:password@localhost:5432/family_tree_test
 
 # API設定
-API_PORT=8000
-API_BASE_URL=http://localhost:8000
-
-# フロントエンド設定
-VITE_API_URL=http://localhost:8000
-
-# 認証設定
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=7d
+PORT=8000
+NODE_ENV=production
 
 # その他
-NODE_ENV=development
-LOG_LEVEL=debug
+LOG_LEVEL=info
 ```
 
 ## 📝 開発ガイド
@@ -137,12 +150,13 @@ LOG_LEVEL=debug
 ### 開発サーバーの起動
 
 ```bash
-# バックエンドとフロントエンドを同時に起動
-npm run dev
+# バックエンドサーバーの起動（ターミナル1）
+cd backend
+DATABASE_URL="file:./dev.db" npm run dev
 
-# 個別に起動
-npm run dev:backend    # バックエンドのみ
-npm run dev:frontend   # フロントエンドのみ
+# フロントエンドサーバーの起動（ターミナル2）
+cd frontend
+npm run dev
 ```
 
 ### テストの実行
@@ -217,6 +231,7 @@ APIの詳細なドキュメントは[APIドキュメント](./docs/api.md)を参
 
 ### 主なエンドポイント
 
+- `GET /health` - ヘルスチェック
 - `GET /api/persons` - 人物一覧取得
 - `POST /api/persons` - 人物作成
 - `GET /api/relationships` - 関係性一覧取得
