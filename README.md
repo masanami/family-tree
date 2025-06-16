@@ -1,5 +1,7 @@
 # Family Tree Application
 
+※ ClaudeCode並列実装検証のためほぼ完全にVibeCodingで作りました。動かない機能が多いです。
+
 家族の系譜を管理・可視化するフルスタックWebアプリケーション
 
 ![Node.js](https://img.shields.io/badge/Node.js-v20.x-green.svg)
